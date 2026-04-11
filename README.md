@@ -1,4 +1,4 @@
-A Windows USB creator for Linux, written in Rust. Create bootable Windows installation USBs from ISO files — the tool that Linux was missing.
+A Windows USB creator for Linux, written in Rust. Create bootable Windows installation USBs from ISO files.
 Features
 
 GPT partition table creation

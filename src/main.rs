@@ -360,7 +360,7 @@ fn main() {
 
         println!(
             "{}",
-            console::style("consStarting Iso writing this process might take a while)")
+            console::style("Starting Iso writing this process might take a while)")
                 .green()
                 .bold()
         );

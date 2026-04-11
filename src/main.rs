@@ -249,7 +249,12 @@ fn main() {
                 .bold()
         );
 
-        println!("start partitiong process:");
+        println!(
+            "{}",
+            console::style("start partitioning process")
+                .green()
+                .bold()
+        );
 
         gdisk
             .add_partition(
@@ -313,7 +318,6 @@ fn main() {
                 .green()
                 .bold()
         );
-        println!("partitioning done ");
 
         let fs = fatfs::FileSystem::new(&mut file_partition, fatfs::FsOptions::new()).unwrap();
         let root_dir = fs.root_dir();

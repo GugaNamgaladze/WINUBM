@@ -213,16 +213,17 @@ fn main() {
         .unwrap();
 
     if confirmation {
-        println!(
-            "{}",
-            console::style("Attention! starting  creation  of gpt table")
-                .red()
-                .bold()
-        );
         let iso = dialoguer::Input::<String>::new()
             .with_prompt("Provide absolute path for ISO")
             .interact()
             .unwrap();
+        
+        println!(
+            "{}",
+            console::style("Attention! Starting Process")
+                .red()
+                .bold()
+        );
         let _iso = MountIso::new(Path::new(&iso)).unwrap();
 
         let mut file = std::fs::OpenOptions::new()

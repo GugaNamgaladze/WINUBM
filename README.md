@@ -15,15 +15,15 @@ Minimal binary size (~1.3MB)
 
 Dependencies
 # ntfs-3g   
-Install on your distro:
+# Install on your distro:
 # Arch
-sudo pacman -S ntfs-3g 
+# sudo pacman -S ntfs-3g 
 
 # Ubuntu/Debian
-sudo apt install ntfs-3g 
+# sudo apt install ntfs-3g 
 
 # Fedora
-sudo dnf install ntfs-3g
+# sudo dnf install ntfs-3g
 
 # build from source 
 # https://github.com/GugaNamgaladze/WINUBM.git

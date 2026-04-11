@@ -231,7 +231,12 @@ fn main() {
             .write(true)
             .open(&selected_device)
             .expect("failed ");
-        println!("writing metadata for gpt");
+       println!(
+            "{}",
+            console::style("writing metadata for gpt")
+                .green()
+                .bold()
+        );
 
         let mbr = gpt::mbr::ProtectiveMBR::with_lb_size(
             u32::try_from(blocks - 1).unwrap_or(0xFF_FF_FF_FF),

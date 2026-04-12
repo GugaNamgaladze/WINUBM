@@ -18,7 +18,7 @@ use std::{
 // embeding assests to our executable
 static BOOTX64: &[u8] = include_bytes!("assets/bootx64_signed.efi");
 static NTFS_DRIVER: &[u8] = include_bytes!("assets/ntfs_x64_signed.efi");
-// constants for speaking to ioctl-s
+
 
 const SIMB: &str = r#"
 ██╗    ██╗██╗███╗   ██╗██╗   ██╗██████╗ ███╗   ███╗
@@ -30,6 +30,7 @@ const SIMB: &str = r#"
 ===================================================
 "#;
 
+// constants for speaking to ioctl-s
 const LOOP_CTL_GET_FREE: u64 = 0x4C82;
 const LOOP_SET_FD: u64 = 0x4C00;
 const LOOP_CLR_FD: u64 = 0x4C01;

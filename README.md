@@ -11,7 +11,7 @@ No 4GB file size limit — supports modern Windows 11 ISOs
 Minimal binary size (~1.3MB)
 
 # Linux kernel 5.15+ (for ntfs3 driver) but works with ntfs-3g 
-# works on wsl but since it does not supports ntfs3 kernel drvier you have to use ntfs-3g and wsl requires usbipd-win to attach usb to your wsl2 instance 
+# works on wsl but since it does not support ntfs3 kernel drvier you have to use ntfs-3g and wsl requires usbipd-win to attach usb to your wsl2 instance 
 
 # Dependencies
 # ntfs-3g   
@@ -34,4 +34,4 @@ Minimal binary size (~1.3MB)
 
 # Acknowledgements
 # [UEFI:NTFS](https://github.com/pbatard/uefi-ntfs)
-# This tool uses this amazing project! Thanks for Contributors.
+# This tool uses this amazing project! Thanks to Contributors.

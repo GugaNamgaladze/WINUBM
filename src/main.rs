@@ -5,6 +5,7 @@ use gpt;
 use indicatif::{ProgressBar, ProgressStyle};
 use nix::libc::ioctl;
 use nix::mount::MsFlags;
+use std::io;
 use std::io::Read;
 use std::io::Seek;
 use std::io::Write;
@@ -16,9 +17,8 @@ use std::{
 };
 
 // embeding assests to our executable
-static BOOTX64: &[u8] = include_bytes!("assets/bootx64_signed.efi");
-static NTFS_DRIVER: &[u8] = include_bytes!("assets/ntfs_x64_signed.efi");
-
+static BOOTX64: &[u8] = include_bytes!("assets/bootx64_signed_v2.8.efi");
+static NTFS_DRIVER: &[u8] = include_bytes!("assets/ntfs_x64_signed_v1.9.efi");
 
 const SIMB: &str = r#"
 ██╗    ██╗██╗███╗   ██╗██╗   ██╗██████╗ ███╗   ███╗
@@ -95,22 +95,40 @@ impl MountedNtfs {
         let mountpoint = PathBuf::from("/mnt/winubm/ntfs");
         fs::create_dir_all(&mountpoint)?;
 
-        // nix::mount::mount(
-        //     Some(partition),
-        //     &mountpoint,
-        //     Some("ntfs"),
-        //     MsFlags::empty(),
-        //     None::<&str>,
-        // )?;
+        println!("choose ntfs 3g or ntfs 3 driver 1 for 3g and 2 for ntfs 3 driver ");
 
-        std::process::Command::new("ntfs-3g")
-            .args([partition, "/mnt/winubm/ntfs"])
-            .output()?;
-        Ok(MountedNtfs {
-            mountpoint: mountpoint,
-        })
-    }
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("faieled to read line");
+        let trimmed_input = input.trim();
+
+
+        match trimmed_input {
+
+            "1" | _  => {
+                let status = Command::new("ntfs-3g")
+                    .args([partition, mountpoint.to_str().unwrap_or("/mnt/winubm/ntfs")])
+                    .status()?;}
+
+
+
+            "2"  => {
+                    mount(
+                        Some(partition),
+                        &mountpoint,
+                        Some("ntfs3"),
+                        MsFlags::empty(),
+                        None::<&str>,
+                    )?;
+                }
+        }
+
+        Ok(MountedNtfs { mountpoint })
+
+
 }
+
 impl Drop for MountedNtfs {
     fn drop(&mut self) {
         nix::mount::umount(&self.mountpoint).ok();
@@ -218,12 +236,10 @@ fn main() {
             .with_prompt("Provide absolute path for ISO")
             .interact()
             .unwrap();
-        
+
         println!(
             "{}",
-            console::style("Attention! Starting Process")
-                .red()
-                .bold()
+            console::style("Attention! Starting Process").red().bold()
         );
         let _iso = MountIso::new(Path::new(&iso)).unwrap();
 
@@ -232,11 +248,9 @@ fn main() {
             .write(true)
             .open(&selected_device)
             .expect("failed ");
-       println!(
+        println!(
             "{}",
-            console::style("writing metadata for gpt")
-                .green()
-                .bold()
+            console::style("writing metadata for gpt").green().bold()
         );
 
         let mbr = gpt::mbr::ProtectiveMBR::with_lb_size(
@@ -258,9 +272,7 @@ fn main() {
 
         println!(
             "{}",
-            console::style("start partitioning process")
-                .green()
-                .bold()
+            console::style("start partitioning process").green().bold()
         );
 
         gdisk

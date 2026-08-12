@@ -103,30 +103,29 @@ impl MountedNtfs {
             .expect("faieled to read line");
         let trimmed_input = input.trim();
 
-
         match trimmed_input {
-
-            "1" | _  => {
+            "1" => {
                 let status = Command::new("ntfs-3g")
                     .args([partition, mountpoint.to_str().unwrap_or("/mnt/winubm/ntfs")])
-                    .status()?;}
+                    .status()?;
+            }
 
-
-
-            "2"  => {
-                    mount(
-                        Some(partition),
-                        &mountpoint,
-                        Some("ntfs3"),
-                        MsFlags::empty(),
-                        None::<&str>,
-                    )?;
-                }
+            "2" => {
+                nix::mount::mount(
+                    Some(partition),
+                    &mountpoint,
+                    Some("ntfs3"),
+                    MsFlags::empty(),
+                    None::<&str>,
+                )?;
+            }
+            _ => {
+                println!("please choose corresponding number ");
+            }
         }
 
         Ok(MountedNtfs { mountpoint })
-
-
+    }
 }
 
 impl Drop for MountedNtfs {

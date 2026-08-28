@@ -3,14 +3,18 @@ use dialoguer::{Confirm, Select};
 use fatfs;
 use gpt;
 use indicatif::{ProgressBar, ProgressStyle};
+use nix::errno;
 use nix::libc::ioctl;
+use nix::libc::sleep;
 use nix::mount::MsFlags;
+use core::error;
 use std::io;
 use std::io::Read;
 use std::io::Seek;
 use std::io::Write;
 use std::os::unix::io::AsRawFd;
 use std::process::Command;
+use std::time::Duration;
 use std::{
     fs,
     path::{Path, PathBuf},
@@ -41,7 +45,7 @@ struct MountIso {
 }
 
 impl MountIso {
-    fn new(iso_path: &Path) -> Result<MountIso, Box<dyn std::error::Error>> {
+    fn new(iso_path: &Path) -> Result<MountIso, Box<dyn error::Error>> {
         let loop_ctl = fs::File::open("/dev/loop-control")?;
 
         let iso_file = fs::File::open(iso_path)?;
@@ -90,45 +94,96 @@ struct MountedNtfs {
     mountpoint: PathBuf,
 }
 
-impl MountedNtfs {
-    fn new(partition: &str) -> Result<MountedNtfs, Box<dyn std::error::Error>> {
+impl MountedNtfs{
+
+fn ntfs_3g_implementation(partition: &str) -> Result<MountedNtfs, Box<dyn error::Error>> {
         let mountpoint = PathBuf::from("/mnt/winubm/ntfs");
-        fs::create_dir_all(&mountpoint)?;
-
-        println!("choose ntfs 3g or ntfs 3 driver 1 for 3g and 2 for ntfs 3 driver ");
-
-        let mut input = String::new();
-        io::stdin()
-            .read_line(&mut input)
-            .expect("faieled to read line");
-        let trimmed_input = input.trim();
-
-        match trimmed_input {
-            "1" => std::process::Command::new("ntfs-3g")
+        fs::create_dir_all(&mountpoint);
+        std::process::Command::new("ntfs-3g")
             .args([partition, "/mnt/winubm/ntfs"])
             .output()?;
+
+
+        Ok(MountedNtfs {
+            mountpoint: mountpoint,
+    })
+        
+ }
+    
+
+    fn ntfs_3_implementation(partition: &str) -> Result<MountedNtfs, Box<dyn error::Error>> {
+        let mountpoint = PathBuf::from("/mnt/winubm/ntfs");
+        fs::create_dir_all(&mountpoint);
+        std::thread::sleep(Duration::from_millis(10000));
+        nix::mount::mount(
+            Some(partition),
+            &mountpoint,
+            Some("ntfs"),
+            MsFlags::empty(),
+            None::<&str>
+
+        );
         Ok(MountedNtfs {
             mountpoint: mountpoint,
         })
-    
-
-            "2" => {
-                nix::mount::mount(
-                    Some(partition),
-                    &mountpoint,
-                    Some("ntfs3"),
-                    MsFlags::empty(),
-                    None::<&str>,
-                )?;
-            }
-            _ => {
-                println!("please choose corresponding number ");
-            }
-        }
-
-        Ok(MountedNtfs { mountpoint })
-    }
+        
 }
+}
+// impl MountedNtfs {
+//     fn new(partition: &str) -> Result<MountedNtfs, Box<dyn std::error::Error>> {
+//         let mountpoint = PathBuf::from("/mnt/winubm/ntfs");
+//         fs::create_dir_all(&mountpoint)?;
+
+//         println!("choose ntfs 3g or ntfs 3 driver 1 for 3g and 2 for ntfs 3 driver ");
+
+//          let mut input = String::new();
+//          io::stdin().read_line(&mut input).expect("faieled to read line");
+         
+//          let trimmed_input = input.trim();
+
+//          match trimmed_input {
+          
+//      "1" => { 
+        
+//         console::Style::from_dotted_str("as per users reqwest we are startging writing operation").green();
+
+//         ntfs_3g_implementation();
+
+//      }
+
+//      "2" => {
+//         console::Style::from_dotted_str("as per users reqwest we are startging writing operation").green();
+
+//         ntfs_3_implementation();
+//      }
+//         _=> {
+//             println!("no valid option was chosen if agree we will continue with 3g");  println!("no valid option was chosen if agree we will continue with 3g")
+//     |                                                                                     ^ help: add `;` here
+// 156 |             let get_response = dialoguer::Confir
+//             let get_response = dialoguer::Confirm::new()
+//             .with_prompt("do you want to continue ")
+//             .interact();
+//         if get_response {
+//             ntfs_3g_implementation();
+//         }
+
+//         else {
+//             println!("as per yousers reqwest we will" abort program);
+//             std::process::exit();
+//         }
+
+//         }
+
+
+//         }
+
+
+
+
+
+
+
+
 
 impl Drop for MountedNtfs {
     fn drop(&mut self) {
@@ -238,6 +293,13 @@ fn main() {
             .interact()
             .unwrap();
 
+    println!("{}", console::style("choose to user ntfs 3g or new ntfs 3 driver").green().bold());
+
+    let mut driver_confirmation = String::new();
+    io::stdin().read_line(&mut driver_confirmation).expect("failed to read line");
+    let driver_confirmation = driver_confirmation.trim();
+
+        
         println!(
             "{}",
             console::style("Attention! Starting Process").red().bold()
@@ -371,7 +433,22 @@ fn main() {
         }
         println!("{}", console::style("done").green().bold());
 
-        let _ntfs = MountedNtfs::new(&win_partition).unwrap();
+        match driver_confirmation {
+            "1" => {
+                let _ntfs = MountedNtfs::ntfs_3g_implementation(&win_partition).unwrap();
+
+            }
+
+            "2" => {
+               let _ntfs = MountedNtfs::ntfs_3_implementation(&win_partition).unwrap();
+                
+            }
+            _ => {
+                println!("no option was chosen fallbackign for ntfs 3g");
+               let _ntfs = MountedNtfs::ntfs_3g_implementation(&win_partition).unwrap();
+
+            }
+        }
 
         let total = total_size(Path::new("/mnt/winubm/iso"));
         let bar = ProgressBar::new(total);
@@ -410,3 +487,4 @@ fn main() {
         );
     }
 }
+

@@ -129,59 +129,6 @@ fn ntfs_3g_implementation(partition: &str) -> Result<MountedNtfs, Box<dyn error:
         
 }
 }
-// impl MountedNtfs {
-//     fn new(partition: &str) -> Result<MountedNtfs, Box<dyn std::error::Error>> {
-//         let mountpoint = PathBuf::from("/mnt/winubm/ntfs");
-//         fs::create_dir_all(&mountpoint)?;
-
-//         println!("choose ntfs 3g or ntfs 3 driver 1 for 3g and 2 for ntfs 3 driver ");
-
-//          let mut input = String::new();
-//          io::stdin().read_line(&mut input).expect("faieled to read line");
-         
-//          let trimmed_input = input.trim();
-
-//          match trimmed_input {
-          
-//      "1" => { 
-        
-//         console::Style::from_dotted_str("as per users reqwest we are startging writing operation").green();
-
-//         ntfs_3g_implementation();
-
-//      }
-
-//      "2" => {
-//         console::Style::from_dotted_str("as per users reqwest we are startging writing operation").green();
-
-//         ntfs_3_implementation();
-//      }
-//         _=> {
-//             println!("no valid option was chosen if agree we will continue with 3g");  println!("no valid option was chosen if agree we will continue with 3g")
-//     |                                                                                     ^ help: add `;` here
-// 156 |             let get_response = dialoguer::Confir
-//             let get_response = dialoguer::Confirm::new()
-//             .with_prompt("do you want to continue ")
-//             .interact();
-//         if get_response {
-//             ntfs_3g_implementation();
-//         }
-
-//         else {
-//             println!("as per yousers reqwest we will" abort program);
-//             std::process::exit();
-//         }
-
-//         }
-
-
-//         }
-
-
-
-
-
-
 
 
 

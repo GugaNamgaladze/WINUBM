@@ -104,11 +104,13 @@ impl MountedNtfs {
         let trimmed_input = input.trim();
 
         match trimmed_input {
-            "1" => {
-                let status = Command::new("ntfs-3g")
-                    .args([partition, mountpoint.to_str().unwrap_or("/mnt/winubm/ntfs")])
-                    .status()?;
-            }
+            "1" => std::process::Command::new("ntfs-3g")
+            .args([partition, "/mnt/winubm/ntfs"])
+            .output()?;
+        Ok(MountedNtfs {
+            mountpoint: mountpoint,
+        })
+    
 
             "2" => {
                 nix::mount::mount(

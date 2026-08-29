@@ -111,23 +111,24 @@ fn ntfs_3g_implementation(partition: &str) -> Result<MountedNtfs, Box<dyn error:
  }
     
 
-    fn ntfs_3_implementation(partition: &str) -> Result<MountedNtfs, Box<dyn error::Error>> {
-        let mountpoint = PathBuf::from("/mnt/winubm/ntfs");
-        fs::create_dir_all(&mountpoint);
-        std::thread::sleep(Duration::from_millis(10000));
-        nix::mount::mount(
-            Some(partition),
-            &mountpoint,
-            Some("ntfs"),
-            MsFlags::empty(),
-            None::<&str>
+//     fn ntfs_3_implementation(partition: &str) -> Result<MountedNtfs, Box<dyn error::Error>> {
+//         let mountpoint = PathBuf::from("/mnt/winubm/ntfs");
+//         fs::create_dir_all(&mountpoint);
+//         std::thread::sleep(Duration::from_millis(10000));
+//         nix::mount::mount(
+//             Some(partition),
+//             &mountpoint,
+//             Some("ntfs"),
+//             MsFlags::empty(),
+//             None::<&str>
 
-        );
-        Ok(MountedNtfs {
-            mountpoint: mountpoint,
-        })
+//         );
+//         Ok(MountedNtfs {
+//             mountpoint: mountpoint,
+//         })
         
-}
+// }
+    
 }
 
 
@@ -380,22 +381,24 @@ fn main() {
         }
         println!("{}", console::style("done").green().bold());
 
-        match driver_confirmation {
-            "1" => {
-                let _ntfs = MountedNtfs::ntfs_3g_implementation(&win_partition).unwrap();
+        let _ntfs = MountedNtfs::ntfs_3g_implementation(&win_partition).unwrap();
 
-            }
+        // match driver_confirmation {
+        //     "1" => {
+        //         let _ntfs = MountedNtfs::ntfs_3g_implementation(&win_partition).unwrap();
 
-            "2" => {
-               let _ntfs = MountedNtfs::ntfs_3_implementation(&win_partition).unwrap();
+        //     }
+
+        //     "2" => {
+        //        let _ntfs = MountedNtfs::ntfs_3_implementation(&win_partition).unwrap();
                 
-            }
-            _ => {
-                println!("no option was chosen fallbackign for ntfs 3g");
-               let _ntfs = MountedNtfs::ntfs_3g_implementation(&win_partition).unwrap();
+        //     }
+        //     _ => {
+        //         println!("no option was chosen fallbackign for ntfs 3g");
+        //        let _ntfs = MountedNtfs::ntfs_3g_implementation(&win_partition).unwrap();
 
-            }
-        }
+        //     }
+        // }
 
         let total = total_size(Path::new("/mnt/winubm/iso"));
         let bar = ProgressBar::new(total);

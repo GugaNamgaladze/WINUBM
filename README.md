@@ -8,7 +8,6 @@ Secure Boot compatible (signed binaries)
 Real-time progress bar with speed and ETA
 Automatic ISO mounting via loop device
 No 4GB file size limit — supports modern Windows 11 ISOs
-Minimal binary size (~1.3MB)
 
 # Linux kernel 5.15+ (for ntfs3 driver) but works with ntfs-3g 
 # works on wsl but since it does not support ntfs3 kernel drvier you have to use ntfs-3g and wsl requires usbipd-win to attach usb to your wsl2 instance 

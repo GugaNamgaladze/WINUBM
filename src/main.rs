@@ -241,11 +241,11 @@ fn main() {
             .interact()
             .unwrap();
 
-    println!("{}", console::style("choose to user ntfs 3g or new ntfs 3 driver").green().bold());
+    // println!("{}", console::style("choose to user ntfs 3g or new ntfs 3 driver").green().bold());
 
-    let mut driver_confirmation = String::new();
-    io::stdin().read_line(&mut driver_confirmation).expect("failed to read line");
-    let driver_confirmation = driver_confirmation.trim();
+    // let mut driver_confirmation = String::new();
+    // io::stdin().read_line(&mut driver_confirmation).expect("failed to read line");
+    // let driver_confirmation = driver_confirmation.trim();
 
         
         println!(
